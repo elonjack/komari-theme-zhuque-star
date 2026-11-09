@@ -1,0 +1,14 @@
+{
+  "name": "komari-zhuque-star",
+  "private": true,
+  "version": "0.7.1",
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "preview": "node tools/preview.mjs",
+    "test": "node tests/theme.test.mjs",
+    "check": "npm run build && npm test",
+    "package": "npm run check && node tools/package.mjs"
+  },
+  "engines": { "node": ">=20" }
+}

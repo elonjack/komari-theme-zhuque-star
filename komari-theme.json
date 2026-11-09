@@ -1,0 +1,35 @@
+{
+  "name": {
+    "zh-CN": "仙逆 · 朱雀星（非官方同人主题）",
+    "en": "Renegade Immortal · Suzaku Star (Unofficial Fan Theme)"
+  },
+  "short": "ZhuqueStar",
+  "description": {
+    "zh-CN": "分层灵风王林主视觉、昼夜 WebGL 朱雀星、明暗有别的专属宗门场景与完整节点、流量、资产、Ping、网络身份观测。",
+    "en": "A layered-wind hero, day-night WebGL globe, unique light and dark sect realms, and complete telemetry with optional network identity."
+  },
+  "version": "0.7.1",
+  "author": "Zhuque Star Theme",
+  "url": "",
+  "preview": "dist/assets/images/wanglin-original-4k-v3.png",
+  "configuration": {
+    "type": "managed",
+    "icon": "Orbit",
+    "name": { "zh-CN": "朱雀星设置", "en": "Suzaku Star Settings" },
+    "data": [
+      { "name": { "zh-CN": "星域显示", "en": "Star atlas" }, "type": "title" },
+      { "key": "atlas_title", "name": { "zh-CN": "首页题名", "en": "Atlas title" }, "type": "string", "default": "朱雀星" },
+      { "key": "lore_mode", "name": { "zh-CN": "仙逆沉浸文案", "en": "Lore labels" }, "type": "switch", "default": true },
+      { "key": "show_billing", "name": { "zh-CN": "显示价格与到期", "en": "Show billing" }, "type": "switch", "default": true },
+      { "key": "show_provider", "name": { "zh-CN": "显示服务商", "en": "Show provider" }, "type": "switch", "default": true },
+      { "key": "show_character", "name": { "zh-CN": "显示霜华王林主视觉", "en": "Show Frost Wang Lin hero" }, "type": "switch", "default": true },
+      { "key": "motion_enabled", "name": { "zh-CN": "动态首屏", "en": "Animated hero" }, "type": "switch", "default": true },
+      { "key": "motion_strength", "name": { "zh-CN": "动态强度", "en": "Motion strength" }, "type": "select", "options": "轻柔,标准,强烈", "default": "标准" },
+      { "key": "show_network_identity", "name": { "zh-CN": "显示 IP 归属与全球延迟", "en": "Show IP identity and global latency" }, "type": "switch", "default": false, "help": { "zh-CN": "默认关闭。开启后才读取节点公开 IPv4/IPv6，并调用 Komari 本机 IP 信息插件；主题不会直接请求第三方 IP 服务。", "en": "Off by default. Reads public node addresses and Komari's local IP-info plugin only when enabled." } },
+      { "key": "font_style", "name": { "zh-CN": "全站字韵", "en": "Typography style" }, "type": "select", "options": "颜楷风,行书风,宋韵风,现代易读", "default": "颜楷风", "help": { "zh-CN": "标题优先调用系统书法字体，正文保留清晰易读的楷体回退；不会联网加载字体。", "en": "Uses installed calligraphic fonts with readable local fallbacks; no remote font request." } },
+      { "key": "star_density", "name": { "zh-CN": "星尘密度", "en": "Star density" }, "type": "select", "options": "克制,标准,繁星", "default": "标准" },
+      { "key": "country_sects", "name": { "zh-CN": "国家宗门映射", "en": "Country to sect mapping" }, "type": "string", "default": "CN=恒岳派;HK=炼魂宗;SG=云天宗;JP=战神殿;DE=大罗剑宗;FI=雨之仙界;US=天道宗", "help": { "zh-CN": "格式：CN=恒岳派;JP=战神殿。国家使用两位代码，一个国家只显示一个宗门。", "en": "Example: CN=Heng Yue; JP=War God. Use two-letter country codes." } },
+      { "key": "group_aliases", "name": { "zh-CN": "分组别名", "en": "Group aliases" }, "type": "string", "default": "", "help": { "zh-CN": "格式：香港=赵国;日本=火焚国。只改变显示名，不改变真实分组。", "en": "Example: Hong Kong=Zhao; Japan=Fireburn." } }
+    ]
+  }
+}
