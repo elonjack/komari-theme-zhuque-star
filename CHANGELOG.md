@@ -1,5 +1,11 @@
 # 更新日志
 
+## v0.7.2 — 远程导入修复
+
+- 修复 ZIP 条目被写成 `./komari-theme.json`，导致 Komari 严格根目录检测失败的问题。
+- 打包后自动检查 `komari-theme.json` 与 `dist/index.html` 的精确路径，防止再次生成不可导入的主题包。
+- 在主题清单中写入 GitHub 仓库地址，以便 Komari 后续从最新 Release 更新。
+
 ## v0.7.1 — 宗门万象
 
 - 将朱雀星球坐标精简为纯国旗标记，移除装饰性“朱雀”方印和遮挡地表的文字标签。
@@ -9,4 +15,4 @@
 - 增加默认关闭的网络身份模块，可显示 IPv4/IPv6、ASN、运营商、IP 分类和全球延迟。
 - 优化宗门图片体积、离屏渲染和移动端布局。
 
-安装文件：`komari-zhuque-star-v0.7.1.zip`
+安装文件：`komari-zhuque-star-v0.7.2.zip`

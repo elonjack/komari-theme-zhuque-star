@@ -64,7 +64,8 @@ test("frost realm release includes local motion, a rotating country-sect globe a
   const css = await readFile("src/assets/zhuque.css", "utf8");
   const motion = await readFile("src/assets/hero-motion.js", "utf8");
   const manifest = JSON.parse(await readFile("komari-theme.json", "utf8"));
-  assert.equal(manifest.version, "0.7.1");
+  assert.equal(manifest.version, "0.7.2");
+  assert.equal(manifest.url, "https://github.com/elonjack/komari-theme-zhuque-star");
   assert.match(main, /renderSectGlobe/);
   assert.match(main, /countrySects/);
   assert.match(main, /data-country/);

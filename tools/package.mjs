@@ -16,8 +16,32 @@ await cp(resolve(root, "dist"), resolve(staging, "dist"), { recursive: true });
 await cp(resolve(root, "komari-theme.json"), resolve(staging, "komari-theme.json"));
 
 await new Promise((accept, reject) => {
-  const process = spawn("tar.exe", ["-a", "-c", "-f", output, "-C", staging, "."], { stdio: "inherit" });
+  // Komari requires the manifest entry name to be exactly
+  // `komari-theme.json`. Packing `.` prefixes every entry with `./` and the
+  // remote importer then reports that the manifest is missing.
+  const process = spawn("tar.exe", ["-a", "-c", "-f", output, "-C", staging, "komari-theme.json", "dist"], { stdio: "inherit" });
   process.on("exit", (code) => code === 0 ? accept() : reject(new Error(`tar exited with ${code}`)));
   process.on("error", reject);
 });
+
+const archive = await readFile(output);
+let eocd = -1;
+for (let index = archive.length - 22; index >= Math.max(0, archive.length - 65557); index -= 1) {
+  if (archive.readUInt32LE(index) === 0x06054b50) { eocd = index; break; }
+}
+if (eocd < 0) throw new Error("Package ZIP end record was not found");
+const entryCount = archive.readUInt16LE(eocd + 10);
+let cursor = archive.readUInt32LE(eocd + 16);
+const entries = [];
+for (let index = 0; index < entryCount; index += 1) {
+  if (archive.readUInt32LE(cursor) !== 0x02014b50) throw new Error("Package ZIP central directory is invalid");
+  const nameLength = archive.readUInt16LE(cursor + 28);
+  const extraLength = archive.readUInt16LE(cursor + 30);
+  const commentLength = archive.readUInt16LE(cursor + 32);
+  entries.push(archive.subarray(cursor + 46, cursor + 46 + nameLength).toString("utf8"));
+  cursor += 46 + nameLength + extraLength + commentLength;
+}
+if (!entries.includes("komari-theme.json")) throw new Error("Package manifest is not at ZIP root");
+if (!entries.includes("dist/index.html")) throw new Error("Package is missing dist/index.html");
+if (entries.some((entry) => entry.startsWith("./"))) throw new Error("Package contains unsupported ./ entry prefixes");
 console.log(`Created ${output}`);
