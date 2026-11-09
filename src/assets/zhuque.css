@@ -89,7 +89,7 @@ html,body{background:#e6e8eb}
 .frost-hero:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(235,238,241,.93) 0%,rgba(235,238,241,.54) 28%,transparent 48%),linear-gradient(0deg,rgba(225,228,232,.2),transparent 30%);pointer-events:none}
 .frost-hero:after{content:"";position:absolute;inset:auto 0 var(--hero-ledger-reserve);height:25%;z-index:1;background:linear-gradient(0deg,rgba(230,232,235,.38),rgba(230,232,235,.16) 38%,transparent);pointer-events:none}
 .hero-fallback,.hero-canvas,.hero-quiet,.hero-veil{position:absolute;inset:0 0 auto;width:100%;height:calc(100% - var(--hero-ledger-reserve))}
-.hero-fallback{z-index:0;background-color:#d8dce1;background-image:url("./images/wanglin-original-4k-v3.png"),linear-gradient(rgba(223,227,232,.48),rgba(223,227,232,.48)),url("./images/wanglin-original-4k-v3.png");background-position:center,center,center;background-size:contain,cover,cover;background-repeat:no-repeat;transition:opacity .9s ease}
+.hero-fallback{z-index:0;background-color:#d8dce1;background-image:url("./images/wanglin-original-4k-v3.jpg"),linear-gradient(rgba(223,227,232,.48),rgba(223,227,232,.48)),url("./images/wanglin-original-4k-v3.jpg");background-position:center,center,center;background-size:contain,cover,cover;background-repeat:no-repeat;transition:opacity .9s ease}
 .hero-canvas{z-index:0;display:block;opacity:0;transition:opacity 1s ease}
 .motion-ready .hero-canvas{opacity:1}.motion-ready .hero-fallback{opacity:0}
 .hero-veil{z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 40%,transparent 18%,rgba(42,47,58,.07) 75%),linear-gradient(180deg,rgba(255,255,255,.08),transparent 52%)}
@@ -170,7 +170,7 @@ html,body{background:#e6e8eb}
 
 @media(max-width:1100px){
   .frost-hero{--hero-ledger-reserve:210px;min-height:740px;grid-template-columns:1fr;padding-top:280px}
-  .hero-fallback{background-image:linear-gradient(rgba(223,227,232,.22),rgba(223,227,232,.22)),url("./images/wanglin-original-4k-v3.png");background-size:cover,cover;background-position:center,center}
+  .hero-fallback{background-image:linear-gradient(rgba(223,227,232,.22),rgba(223,227,232,.22)),url("./images/wanglin-original-4k-v3.jpg");background-size:cover,cover;background-position:center,center}
   .frost-hero:before{background:linear-gradient(0deg,rgba(231,234,237,.96) 0%,rgba(231,234,237,.62) 43%,transparent 68%)}
   .frost-hero .overview-copy{grid-column:1;width:100%;padding:30px 0 18px;text-align:center;justify-self:center;align-self:end;background:radial-gradient(ellipse at 50% 50%,rgba(246,247,248,.88),transparent 72%)}
   .frost-hero .overview-copy h1{font-size:70px}.frost-hero .overview-ledger{grid-column:1;width:100%}
@@ -293,7 +293,7 @@ html,body{background:#e6e8eb}
 .star-region.sect-soul>.sect-backdrop,.sect-soul .sect-thumbnail,.detail-hero.sect-soul .detail-orb{background-image:linear-gradient(90deg,transparent 35%,rgba(4,9,15,.82) 100%),url("./images/sect-soul-refining-v3.jpg")}
 .star-region.sect-war>.sect-backdrop,.sect-war .sect-thumbnail,.detail-hero.sect-war .detail-orb{background-image:linear-gradient(90deg,transparent 48%,rgba(249,235,218,.72) 100%),url("./images/sect-war-god-v1.jpg")}
 .star-region.sect-cloud>.sect-backdrop,.sect-cloud .sect-thumbnail,.detail-hero.sect-cloud .detail-orb{background-image:linear-gradient(90deg,transparent 48%,rgba(235,245,250,.72) 100%),url("./images/sect-cloud-heaven-v1.jpg")}
-.star-region.sect-ancient>.sect-backdrop,.sect-ancient .sect-thumbnail,.detail-hero.sect-ancient .detail-orb{background-image:linear-gradient(90deg,transparent 35%,rgba(4,9,15,.8) 100%),url("./images/realm-ancient-god-v2.png")}
+.star-region.sect-ancient>.sect-backdrop,.sect-ancient .sect-thumbnail,.detail-hero.sect-ancient .detail-orb{background-image:linear-gradient(90deg,transparent 35%,rgba(4,9,15,.8) 100%),url("./images/realm-ancient-god-v2.jpg")}
 
 .sect-title{position:relative;padding-left:58px}.sect-title>p{margin-left:-58px}.sect-emblem{position:absolute;left:0;top:22px;display:grid;place-items:center;width:42px;height:42px;border:1px solid color-mix(in srgb,var(--sect-accent) 55%,transparent);background:color-mix(in srgb,var(--sect-accent) 10%,rgba(255,255,255,.7));transform:rotate(45deg);box-shadow:0 7px 20px color-mix(in srgb,var(--sect-accent) 18%,transparent)}
 .sect-emblem .sect-icon{width:27px;height:27px;transform:rotate(-45deg)}.sect-icon{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;color:var(--sect-accent)}

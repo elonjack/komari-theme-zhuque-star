@@ -8,10 +8,10 @@
     "zh-CN": "分层灵风王林主视觉、昼夜 WebGL 朱雀星、明暗有别的专属宗门场景与完整节点、流量、资产、Ping、网络身份观测。",
     "en": "A layered-wind hero, day-night WebGL globe, unique light and dark sect realms, and complete telemetry with optional network identity."
   },
-  "version": "0.7.3",
+  "version": "0.7.4",
   "author": "Zhuque Star Theme",
   "url": "https://github.com/elonjack/komari-theme-zhuque-star",
-  "preview": "dist/assets/images/wanglin-original-4k-v3.png",
+  "preview": "dist/assets/images/wanglin-original-4k-v3.jpg",
   "configuration": {
     "type": "managed",
     "icon": "Orbit",

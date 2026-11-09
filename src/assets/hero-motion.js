@@ -201,7 +201,7 @@ export function mountHeroMotion(root, options = {}) {
     animationFrame = requestAnimationFrame(draw);
   };
   image.onerror = () => root.classList.add("motion-static");
-  image.src = "/assets/images/wanglin-original-4k-v3.png";
+  image.src = "/assets/images/wanglin-original-4k-v3.jpg";
 
   const onPointerMove = (event) => {
     const bounds = root.getBoundingClientRect();

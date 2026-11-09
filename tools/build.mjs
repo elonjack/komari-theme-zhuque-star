@@ -11,6 +11,28 @@ await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 await cp(source, output, { recursive: true });
 
+// Keep original and retired artwork in source control for future redesigns,
+// but never ship it in the Komari runtime bundle. Remote theme import is a
+// synchronous download, so dead multi-megabyte images can trigger proxy 504s.
+const runtimeImages = new Set([
+  "wanglin-original-4k-v3.jpg",
+  "realm-ancient-god-v2.jpg",
+  "earth-blue-marble-2048.jpg",
+  "earth-night.jpg",
+  "earth-topology.png",
+  "earth-water.png",
+  "sect-hengyue-v3.jpg",
+  "sect-daluo-v1.jpg",
+  "sect-rain-immortal-v1.jpg",
+  "sect-soul-refining-v3.jpg",
+  "sect-war-god-v1.jpg",
+  "sect-cloud-heaven-v1.jpg",
+]);
+const outputImages = resolve(output, "assets", "images");
+for (const entry of await readdir(outputImages, { withFileTypes: true })) {
+  if (entry.isFile() && !runtimeImages.has(entry.name)) await rm(resolve(outputImages, entry.name));
+}
+
 async function versionImports(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const path = resolve(directory, entry.name);

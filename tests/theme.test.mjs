@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import { normalizeNode, nodeHealth } from "../src/assets/model.js";
 import { countryIdentity, formatBytes, parseAliases, ratio } from "../src/assets/format.js";
 
@@ -54,7 +54,7 @@ test("node overview is a continuous ledger rather than card components", async (
   assert.match(css, /zhuque-hero-v2\.png/);
   assert.match(css, /sect-hengyue-v2\.png/);
   assert.match(css, /sect-lianhun-v2\.png/);
-  assert.match(css, /realm-ancient-god-v2\.png/);
+  assert.match(css, /realm-ancient-god-v2\.jpg/);
   assert.match(main, /country-mark/);
   assert.match(css, /wanglin-whitehair-v3\.png/);
 });
@@ -64,12 +64,12 @@ test("frost realm release includes local motion, a rotating country-sect globe a
   const css = await readFile("src/assets/zhuque.css", "utf8");
   const motion = await readFile("src/assets/hero-motion.js", "utf8");
   const manifest = JSON.parse(await readFile("komari-theme.json", "utf8"));
-  assert.equal(manifest.version, "0.7.3");
+  assert.equal(manifest.version, "0.7.4");
   assert.equal(manifest.url, "https://github.com/elonjack/komari-theme-zhuque-star");
   assert.match(main, /renderSectGlobe/);
   assert.match(main, /countrySects/);
   assert.match(main, /data-country/);
-  assert.match(css, /wanglin-original-4k-v3\.png/);
+  assert.match(css, /wanglin-original-4k-v3\.jpg/);
   assert.match(css, /prefers-reduced-motion:reduce/);
   assert.match(motion, /IntersectionObserver/);
   assert.doesNotMatch(motion, /https?:\/\//i);
@@ -126,6 +126,18 @@ test("v0.7.3 patches live telemetry without rebuilding image and WebGL layers", 
   assert.match(css, /--hero-ledger-reserve/);
   assert.match(motion, /fittedUv/);
   assert.match(motion, /gl\.uniform2f\(uniforms\.u_cover, aspectRatio, 1\)/);
+});
+
+test("v0.7.4 ships a compact runtime image set for remote import", async () => {
+  const directory = "dist/assets/images";
+  const files = await readdir(directory);
+  assert.ok(files.includes("wanglin-original-4k-v3.jpg"));
+  assert.ok(files.includes("realm-ancient-god-v2.jpg"));
+  for (const retired of ["wanglin-original-4k-v3.png", "zhuque-hero-v2.png", "wanglin-whitehair-v3.png", "sect-hengyue-v2.png", "sect-lianhun-v2.png"]) {
+    assert.equal(files.includes(retired), false);
+  }
+  const bytes = (await Promise.all(files.map(async (file) => (await stat(`${directory}/${file}`)).size))).reduce((sum, size) => sum + size, 0);
+  assert.ok(bytes < 8 * 1024 * 1024, `runtime images are ${(bytes / 1024 / 1024).toFixed(2)} MB`);
 });
 
 test("telemetry parity includes swap, GPU, kernel, quota modes and opt-in network identity", async () => {
