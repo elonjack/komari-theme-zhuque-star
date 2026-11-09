@@ -75,6 +75,7 @@ html,body{background:#e6e8eb}
 .sorter select{background:rgba(255,255,255,.4)}
 
 .frost-hero{
+  --hero-ledger-reserve:140px;
   min-height:min(820px,calc(100vh - 76px));
   display:grid;
   grid-template-columns:minmax(280px,520px) 1fr;
@@ -85,10 +86,10 @@ html,body{background:#e6e8eb}
   border-bottom:1px solid rgba(41,47,60,.18);
   isolation:isolate;
 }
-.frost-hero:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(235,238,241,.93) 0%,rgba(235,238,241,.54) 28%,transparent 48%),linear-gradient(0deg,rgba(225,228,232,.92),transparent 36%);pointer-events:none}
-.frost-hero:after{content:"";position:absolute;inset:auto 0 0;height:42%;z-index:1;background:linear-gradient(0deg,#e6e8eb,rgba(230,232,235,.66) 38%,transparent);pointer-events:none}
-.hero-fallback,.hero-canvas,.hero-quiet,.hero-veil{position:absolute;inset:0;width:100%;height:100%}
-.hero-fallback{z-index:0;background:#d8dce1 url("./images/wanglin-original-4k-v3.png") center/cover no-repeat;transition:opacity .9s ease}
+.frost-hero:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(235,238,241,.93) 0%,rgba(235,238,241,.54) 28%,transparent 48%),linear-gradient(0deg,rgba(225,228,232,.2),transparent 30%);pointer-events:none}
+.frost-hero:after{content:"";position:absolute;inset:auto 0 var(--hero-ledger-reserve);height:25%;z-index:1;background:linear-gradient(0deg,rgba(230,232,235,.38),rgba(230,232,235,.16) 38%,transparent);pointer-events:none}
+.hero-fallback,.hero-canvas,.hero-quiet,.hero-veil{position:absolute;inset:0 0 auto;width:100%;height:calc(100% - var(--hero-ledger-reserve))}
+.hero-fallback{z-index:0;background-color:#d8dce1;background-image:url("./images/wanglin-original-4k-v3.png"),linear-gradient(rgba(223,227,232,.48),rgba(223,227,232,.48)),url("./images/wanglin-original-4k-v3.png");background-position:center,center,center;background-size:contain,cover,cover;background-repeat:no-repeat;transition:opacity .9s ease}
 .hero-canvas{z-index:0;display:block;opacity:0;transition:opacity 1s ease}
 .motion-ready .hero-canvas{opacity:1}.motion-ready .hero-fallback{opacity:0}
 .hero-veil{z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 40%,transparent 18%,rgba(42,47,58,.07) 75%),linear-gradient(180deg,rgba(255,255,255,.08),transparent 52%)}
@@ -168,7 +169,8 @@ html,body{background:#e6e8eb}
 .km-footer{background:rgba(237,239,242,.64)}
 
 @media(max-width:1100px){
-  .frost-hero{min-height:740px;grid-template-columns:1fr;padding-top:280px}
+  .frost-hero{--hero-ledger-reserve:210px;min-height:740px;grid-template-columns:1fr;padding-top:280px}
+  .hero-fallback{background-image:linear-gradient(rgba(223,227,232,.22),rgba(223,227,232,.22)),url("./images/wanglin-original-4k-v3.png");background-size:cover,cover;background-position:center,center}
   .frost-hero:before{background:linear-gradient(0deg,rgba(231,234,237,.96) 0%,rgba(231,234,237,.62) 43%,transparent 68%)}
   .frost-hero .overview-copy{grid-column:1;width:100%;padding:30px 0 18px;text-align:center;justify-self:center;align-self:end;background:radial-gradient(ellipse at 50% 50%,rgba(246,247,248,.88),transparent 72%)}
   .frost-hero .overview-copy h1{font-size:70px}.frost-hero .overview-ledger{grid-column:1;width:100%}
@@ -283,7 +285,7 @@ html,body{background:#e6e8eb}
 .hero-wind{position:absolute;right:clamp(18px,4vw,64px);top:96px;z-index:5;display:flex;align-items:center;gap:3px;padding:4px;border:1px solid rgba(46,55,69,.15);background:rgba(246,248,250,.58);box-shadow:0 8px 28px rgba(37,48,63,.1);backdrop-filter:blur(12px)}
 .hero-wind>span{padding:0 8px;color:#6a7380;font-size:9px;letter-spacing:.18em}.hero-wind button{padding:6px 9px;border:0;background:transparent;color:#555f6e;font:11px var(--serif);cursor:pointer}.hero-wind button:hover,.hero-wind button.active{background:rgba(137,46,64,.1);color:#812f42}.hero-wind button.active{box-shadow:inset 0 -1px #9a4355}
 
-.star-region{content-visibility:auto;contain-intrinsic-size:820px;--sect-accent:#8d3b4d}
+.star-region{content-visibility:visible;contain:none;--sect-accent:#8d3b4d}
 .star-region.sect-hengyue{--sect-accent:#467d72}.star-region.sect-daluo{--sect-accent:#4c77a6}.star-region.sect-rain{--sect-accent:#6d74ae}.star-region.sect-soul{--sect-accent:#7e2d43}.star-region.sect-war{--sect-accent:#a26334}.star-region.sect-cloud{--sect-accent:#4d8da0}
 .star-region.sect-hengyue>.sect-backdrop,.sect-hengyue .sect-thumbnail,.detail-hero.sect-hengyue .detail-orb{background-image:linear-gradient(90deg,transparent 48%,rgba(236,244,243,.72) 100%),url("./images/sect-hengyue-v3.jpg")}
 .star-region.sect-daluo>.sect-backdrop,.sect-daluo .sect-thumbnail,.detail-hero.sect-daluo .detail-orb{background-image:linear-gradient(90deg,transparent 48%,rgba(226,237,248,.72) 100%),url("./images/sect-daluo-v1.jpg")}

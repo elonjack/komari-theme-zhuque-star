@@ -25,7 +25,14 @@ const FRAGMENT_SHADER = `
 
   void main() {
     vec2 screenUv = v_uv;
-    vec2 uv = (screenUv - 0.5) * u_cover + 0.5;
+    // Fit the complete illustration inside the hero. The reciprocal scale is a
+    // soft full-bleed backdrop, so ultrawide screens do not crop Wang Lin's
+    // head or hands and do not expose empty bars at the sides.
+    vec2 fittedUv = (screenUv - 0.5) * u_cover + 0.5;
+    vec2 backdropScale = vec2(1.0 / u_cover.y, 1.0 / u_cover.x);
+    vec2 backdropUv = (screenUv - 0.5) * backdropScale + 0.5;
+    float inside = step(0.0, fittedUv.x) * step(fittedUv.x, 1.0) * step(0.0, fittedUv.y) * step(fittedUv.y, 1.0);
+    vec2 uv = clamp(fittedUv, vec2(0.001), vec2(0.999));
     uv += (u_mouse - 0.5) * vec2(0.0032, 0.0020) * u_motion;
 
     vec3 probe = texture2D(u_image, uv).rgb;
@@ -60,6 +67,10 @@ const FRAGMENT_SHADER = `
     warped.x += robeMask * (screenUv.x - 0.5) * breathing * 0.0032 * u_motion;
 
     vec3 color = texture2D(u_image, warped).rgb;
+    vec3 backdrop = texture2D(u_image, backdropUv).rgb;
+    float backdropLuma = dot(backdrop, vec3(0.2126, 0.7152, 0.0722));
+    backdrop = mix(vec3(backdropLuma), backdrop, 0.24) * 1.08 + vec3(0.07, 0.08, 0.10);
+    color = mix(backdrop, color, inside);
     float pulse = 0.58 + 0.42 * sin(u_time * 1.08);
     float eyes = gaussian(screenUv, vec2(0.481, 0.817), 22000.0) + gaussian(screenUv, vec2(0.529, 0.817), 22000.0);
     float forehead = gaussian(screenUv, vec2(0.505, 0.889), 9500.0);
@@ -159,7 +170,10 @@ export function mountHeroMotion(root, options = {}) {
     mouse.x += (mouse.targetX - mouse.x) * 0.035;
     mouse.y += (mouse.targetY - mouse.y) * 0.035;
     const canvasAspect = canvas.width / canvas.height;
-    gl.uniform2f(uniforms.u_cover, canvasAspect < imageAspect ? canvasAspect / imageAspect : 1, canvasAspect > imageAspect ? imageAspect / canvasAspect : 1);
+    const aspectRatio = canvasAspect / imageAspect;
+    // Wide heroes show the whole illustration with side ambience; narrow
+    // heroes keep full height and crop only the far left/right hair tips.
+    gl.uniform2f(uniforms.u_cover, aspectRatio, 1);
     gl.uniform2f(uniforms.u_mouse, mouse.x, mouse.y);
     gl.uniform1f(uniforms.u_time, (now - start) / 1000);
     gl.uniform1f(uniforms.u_motion, motion);

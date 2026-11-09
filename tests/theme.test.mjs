@@ -64,7 +64,7 @@ test("frost realm release includes local motion, a rotating country-sect globe a
   const css = await readFile("src/assets/zhuque.css", "utf8");
   const motion = await readFile("src/assets/hero-motion.js", "utf8");
   const manifest = JSON.parse(await readFile("komari-theme.json", "utf8"));
-  assert.equal(manifest.version, "0.7.2");
+  assert.equal(manifest.version, "0.7.3");
   assert.equal(manifest.url, "https://github.com/elonjack/komari-theme-zhuque-star");
   assert.match(main, /renderSectGlobe/);
   assert.match(main, /countrySects/);
@@ -112,6 +112,20 @@ test("v0.7.1 globe uses flag-only country markers without a decorative sigil", a
   assert.doesNotMatch(main + css, /globe-sigil|globe-node-pulse/);
   assert.match(main, /aria-label="筛选/);
   assert.match(css, /\.globe-node>\.flag-icon/);
+});
+
+test("v0.7.3 patches live telemetry without rebuilding image and WebGL layers", async () => {
+  const main = await readFile("src/assets/main.js", "utf8");
+  const css = await readFile("src/assets/zhuque.css", "utf8");
+  const motion = await readFile("src/assets/hero-motion.js", "utf8");
+  assert.match(main, /function patchHomeLive/);
+  assert.match(main, /refreshCurrentView\(\)/);
+  assert.match(main, /data-node-uuid/);
+  assert.match(main, /data-summary/);
+  assert.doesNotMatch(css, /content-visibility:auto/);
+  assert.match(css, /--hero-ledger-reserve/);
+  assert.match(motion, /fittedUv/);
+  assert.match(motion, /gl\.uniform2f\(uniforms\.u_cover, aspectRatio, 1\)/);
 });
 
 test("telemetry parity includes swap, GPU, kernel, quota modes and opt-in network identity", async () => {

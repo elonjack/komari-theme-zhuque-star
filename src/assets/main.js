@@ -135,10 +135,10 @@ function renderHome() {
       ${showCharacter ? `<div class="hero-wind" role="group" aria-label="灵风强度"><span>灵风</span>${[["静风","轻柔"],["灵风","标准"],["狂风","强烈"]].map(([label,value])=>`<button type="button" data-wind="${value}" class="${(settings().motion_strength || "标准") === value ? "active" : ""}">${label}</button>`).join("")}</div>` : ""}
       <div class="overview-copy"><p class="eyebrow">SUZAKU STAR · FROST REALM</p><h1 id="atlas-heading">${escapeHtml(settings().atlas_title || "朱雀星")}</h1><p>${lore("霜华照星海，一念观万宗。", "全部节点实时运行状态")}</p><span class="realm-mark">霜华境 · 非官方同人主题</span></div>
       <div class="overview-ledger">
-        ${stat("星辰", "节点", `${info.online}<small> / ${info.total}</small>`, info.online === info.total ? "清明" : `${info.total - info.online}颗黯淡`)}
-        ${stat("本源", "平均 CPU", `${info.avgCpu.toFixed(1)}<small>%</small>`, info.avgCpu > 70 ? "气机偏高" : "运转平稳")}
-        ${stat("灵潮", "实时带宽", `↓ ${formatBytes(info.down, true)}`, `↑ ${formatBytes(info.up, true)}`)}
-        ${stat("岁月", "累计流量", formatBytes(info.traffic), `${groups.length}方星域`)}
+        ${stat("星辰", "节点", `${info.online}<small> / ${info.total}</small>`, info.online === info.total ? "清明" : `${info.total - info.online}颗黯淡`, "nodes")}
+        ${stat("本源", "平均 CPU", `${info.avgCpu.toFixed(1)}<small>%</small>`, info.avgCpu > 70 ? "气机偏高" : "运转平稳", "cpu")}
+        ${stat("灵潮", "实时带宽", `↓ ${formatBytes(info.down, true)}`, `↑ ${formatBytes(info.up, true)}`, "bandwidth")}
+        ${stat("岁月", "累计流量", formatBytes(info.traffic), `${groups.length}方星域`, "traffic")}
       </div>
     </section>
     ${renderSectGlobe(allSects)}
@@ -156,8 +156,8 @@ function renderHome() {
   return shell(content, "home");
 }
 
-function stat(themed, plain, value, note) {
-  return `<div class="ledger-stat"><span>${lore(themed, plain)}</span><strong>${value}</strong><small>${escapeHtml(note)}</small></div>`;
+function stat(themed, plain, value, note, liveKey = "") {
+  return `<div class="ledger-stat"${liveKey ? ` data-summary="${liveKey}"` : ""}><span>${lore(themed, plain)}</span><strong>${value}</strong><small>${escapeHtml(note)}</small></div>`;
 }
 
 function filterNodes() {
@@ -223,7 +223,7 @@ function renderSectGlobe(sects) {
 function renderGroup(group, index) {
   const online = group.nodes.filter((node) => node.online).length;
   const visual = sectVisual(group.name, group.sourceGroups.join(" "));
-  return `<section class="star-region ${visual.slug} tone-${visual.tone}"><div class="sect-backdrop" aria-hidden="true"></div><header><span class="region-index">${String(index + 1).padStart(2, "0")}</span><div class="sect-title"><p>${escapeHtml(group.country.name)} · ${escapeHtml(group.country.code)} · SECT DOMAIN</p><span class="sect-emblem">${sectIcon(visual.icon, `${group.name}印记`)}</span><h3>${escapeHtml(group.name)}</h3><small>${escapeHtml(visual.verse)}</small></div><div class="region-count"><div class="region-flags"><span title="${escapeHtml(group.country.name)}">${flagMarkup(group.country)}<small>${escapeHtml(group.country.code)}</small></span></div><b>${online}/${group.nodes.length}</b><span>宗门阵眼运转</span></div></header>
+  return `<section class="star-region ${visual.slug} tone-${visual.tone}" data-sect-country="${escapeHtml(group.country.code)}"><div class="sect-backdrop" aria-hidden="true"></div><header><span class="region-index">${String(index + 1).padStart(2, "0")}</span><div class="sect-title"><p>${escapeHtml(group.country.name)} · ${escapeHtml(group.country.code)} · SECT DOMAIN</p><span class="sect-emblem">${sectIcon(visual.icon, `${group.name}印记`)}</span><h3>${escapeHtml(group.name)}</h3><small>${escapeHtml(visual.verse)}</small></div><div class="region-count"><div class="region-flags"><span title="${escapeHtml(group.country.name)}">${flagMarkup(group.country)}<small>${escapeHtml(group.country.code)}</small></span></div><b>${online}/${group.nodes.length}</b><span>宗门阵眼运转</span></div></header>
     <div class="region-lines">${group.nodes.map((node) => renderNodeRow(node, visual.slug)).join("")}</div></section>`;
 }
 
@@ -238,7 +238,7 @@ function renderNodeRow(node, scene = sceneForGroup(node.group)) {
   const latency = pings.length ? pings.reduce((sum, item) => sum + (item.latest || item.avg || 0), 0) / pings.length : null;
   const expiry = expiryDays(node.expiredAt);
   const country = countryIdentity(node.region);
-  return `<article class="star-line ${scene} ${health.key} km-node-display" data-nav="/instance/${encodeURIComponent(node.uuid)}" tabindex="0" role="link" aria-label="查看 ${escapeHtml(node.name)}">
+  return `<article class="star-line ${scene} ${health.key} km-node-display" data-node-uuid="${escapeHtml(node.uuid)}" data-nav="/instance/${encodeURIComponent(node.uuid)}" tabindex="0" role="link" aria-label="查看 ${escapeHtml(node.name)}">
     <div class="star-identity"><div class="sect-thumbnail"><i style="--heat:${node.cpu}%"></i><span>${node.online ? "阵启" : "阵寂"}</span></div><div class="country-mark" title="${escapeHtml(country.name)}">${flagMarkup(country)}<small>${escapeHtml(country.code)}</small></div><div class="identity-copy"><div class="star-title"><h4>${escapeHtml(node.name)}</h4><span class="health-tag">${lore(health.label, health.plain)}</span></div><p>${escapeHtml(node.region)} · ${escapeHtml(node.group)}${settings().show_provider === false ? "" : ` · ${escapeHtml(node.provider)}`}</p></div></div>
     <div class="metric-runes">${rune("CPU", node.cpu)}${rune("内存", ram)}${rune("硬盘", disk)}</div>
     <div class="network-rune"><span>实时灵潮</span><b>↓ ${formatBytes(node.netDown, true)}</b><b>↑ ${formatBytes(node.netUp, true)}</b></div>
@@ -432,7 +432,7 @@ async function loadPings() {
     const payload = await loadPingStats(state.nodes.map(n=>n.uuid), state.tasks.map(t=>t.id));
     const stats = payload?.stats ?? payload?.data?.stats ?? payload?.records ?? [];
     for (const item of stats) state.pings.set(pingKey(String(item.entity_id || item.uuid || item.client), item.task_id ?? item.taskId), { latest: item.latest, avg: item.avg, min: item.min, max: item.max, loss: Number(item.loss || 0) <= 1 ? Number(item.loss || 0) * 100 : Number(item.loss || 0), p50: item.p50, p99: item.p99, stddev: item.stddev });
-    render();
+    refreshCurrentView();
   } catch (error) { console.info("Zhuque Star ping stats unavailable", error); }
 }
 
@@ -440,8 +440,81 @@ function connectRealtime() {
   state.socket?.close();
   state.socket = openRealtime((payload) => {
     const body = payload?.result ?? payload?.data ?? payload; const map = body?.clients ?? body?.statuses ?? body;
-    if (map && typeof map === "object" && !Array.isArray(map)) { state.nodes = state.nodes.map((node) => map[node.uuid] ? mergeStatus(node, map[node.uuid]) : node); render(); }
-  }, (status) => { state.connection = status; render(); if (status === "reconnecting") { clearTimeout(state.timer); state.timer = setTimeout(connectRealtime, 4000); } });
+    if (map && typeof map === "object" && !Array.isArray(map)) { state.nodes = state.nodes.map((node) => map[node.uuid] ? mergeStatus(node, map[node.uuid]) : node); refreshCurrentView(); }
+  }, (status) => { state.connection = status; refreshCurrentView(); if (status === "reconnecting") { clearTimeout(state.timer); state.timer = setTimeout(connectRealtime, 4000); } });
+}
+
+function setText(element, value) {
+  if (element && element.textContent !== String(value)) element.textContent = String(value);
+}
+
+function setMarkup(element, value) {
+  if (element && element.innerHTML !== value) element.innerHTML = value;
+}
+
+function patchConnection() {
+  const element = app.querySelector(".connection");
+  if (!element) return;
+  element.className = `connection ${state.connection}`;
+  setText(element.querySelector("span"), connectionText());
+}
+
+function patchHomeLive() {
+  const info = summary();
+  const summaries = {
+    nodes: [`${info.online}<small> / ${info.total}</small>`, info.online === info.total ? "清明" : `${info.total - info.online}颗黯淡`],
+    cpu: [`${info.avgCpu.toFixed(1)}<small>%</small>`, info.avgCpu > 70 ? "气机偏高" : "运转平稳"],
+    bandwidth: [`↓ ${formatBytes(info.down, true)}`, `↑ ${formatBytes(info.up, true)}`],
+    traffic: [formatBytes(info.traffic), `${countrySects(state.nodes).length}方星域`],
+  };
+  for (const [key, [value, note]] of Object.entries(summaries)) {
+    const element = app.querySelector(`[data-summary="${key}"]`);
+    setMarkup(element?.querySelector("strong"), value);
+    setText(element?.querySelector("small"), note);
+  }
+
+  const nodeMap = new Map(state.nodes.map((node) => [node.uuid, node]));
+  app.querySelectorAll("[data-node-uuid]").forEach((row) => {
+    const node = nodeMap.get(row.dataset.nodeUuid);
+    if (!node) return;
+    const health = nodeHealth(node);
+    const ram = ratio(node.ramUsed, node.ramTotal), disk = ratio(node.diskUsed, node.diskTotal);
+    row.classList.remove("healthy", "warning", "critical", "offline");
+    row.classList.add(health.key);
+    setText(row.querySelector(".health-tag"), lore(health.label, health.plain));
+    setText(row.querySelector(".sect-thumbnail span"), node.online ? "阵启" : "阵寂");
+    row.querySelector(".sect-thumbnail i")?.style.setProperty("--heat", `${node.cpu}%`);
+    const metrics = [node.cpu, ram, disk];
+    row.querySelectorAll(".metric-rune").forEach((metric, index) => {
+      const value = metrics[index] || 0;
+      setText(metric.querySelector("b"), `${value.toFixed(0)}%`);
+      metric.querySelector("em")?.style.setProperty("width", `${Math.min(100, value)}%`);
+    });
+    const network = row.querySelectorAll(".network-rune b");
+    setText(network[0], `↓ ${formatBytes(node.netDown, true)}`);
+    setText(network[1], `↑ ${formatBytes(node.netUp, true)}`);
+    const ledger = row.querySelectorAll(".node-ledger b");
+    setText(ledger[0], formatBytes(node.totalDown + node.totalUp));
+    const pings = state.tasks.map((task) => state.pings.get(pingKey(node.uuid, task.id))).filter(Boolean);
+    const latency = pings.length ? pings.reduce((sum, item) => sum + (item.latest || item.avg || 0), 0) / pings.length : null;
+    setText(ledger[1], latency === null ? "暂无" : `${latency.toFixed(0)} ms`);
+    setText(ledger[2], formatDuration(node.uptime));
+  });
+
+  for (const group of countrySects(state.nodes)) {
+    const online = group.nodes.filter((node) => node.online).length;
+    setText(app.querySelector(`[data-sect-country="${group.country.code}"] .region-count>b`), `${online}/${group.nodes.length}`);
+    setText(app.querySelector(`.globe-ledger-row[data-country="${group.country.code}"] em`), `${online}/${group.nodes.length}`);
+  }
+}
+
+function refreshCurrentView() {
+  patchConnection();
+  if (currentRoute().page === "home" && app.querySelector(".km-page-home")) {
+    patchHomeLive();
+    return;
+  }
+  render();
 }
 
 function render() {
